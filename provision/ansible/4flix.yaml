@@ -1,0 +1,114 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Garantindo /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
+        - 192.168.99.11 graylog graylog.dexter.com.br
+        - 192.168.99.12 prometheus prometheus.dexter.com.br
+        - 192.168.99.13 4flix 4flix.dexter.com.br
+
+    - name: Configura o repositorio do Puppet
+      yum:
+        name: https://yum.puppet.com/puppet5/puppet5-release-el-7.noarch.rpm
+        state: present
+
+    - name: Instalando pacotes de dependencias para o Puppet
+      yum:
+        name: ['python', 'epel-release', 'puppet-agent', 'unzip', 'git', 'wget', 'vim', 'java-1.8.0-openjdk', 'yum-utils', 'device-mapper-persistent-data', 'lvm2']
+
+    - name: Criando o arquivo puppet.conf
+      copy:
+        src: files/puppet.conf
+        dest: /etc/puppetlabs/puppet
+        mode: 0644
+
+    - name: Iniciar servico do Puppet Agent
+      service:
+        name: puppet
+        state: started
+        enabled: yes
+
+    - name: Download do arquivo apache-jmeter-4.0.zip
+      get_url:
+        url: https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-4.0.zip
+        dest: /home/vagrant
+        mode: '0644'
+
+    - name: Descompacta o arquivo apache-jmeter-4.0.zip
+      unarchive:
+        src: /home/vagrant/apache-jmeter-4.0.zip
+        dest: /home/vagrant
+
+    - name: Download do arquivo docker-ce.repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: 0644
+
+    - name: Instalando pacotes do Docker
+      yum:
+        name: ['python-pip', 'docker-ce', 'docker-ce-cli', 'containerd.io']
+
+    - name: Iniciar servico do Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Instalaro pacote python-pycurl
+      yum: 
+        name=python-pycurl
+        state=installed
+
+    - name: Download do repositorio do Jenkins  
+      get_url:
+        url: https://pkg.jenkins.io/redhat/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+      become: true
+
+    - name: Importar chave GPG do Jenkins
+      rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat/jenkins.io.key
+
+    - name: Instalar o Jenkins
+      yum:
+        name: jenkins
+        state: present
+
+    - name: Iniciar servico do Jenkins
+      service:
+        name: jenkins
+        state: started
+        enabled: yes
+
+    - name: Criando o arquivo sudo para o usuario jenkins
+      copy:
+        src: files/jenkins
+        dest: /etc/sudoers.d
+        mode: 0644
+
+    - name: Criando o arquivo mongodb-org-3.6.repo
+      copy:
+        src: files/mongodb-org-3.6.repo
+        dest: /etc/yum.repos.d
+        mode: 0644
+
+    - name: Alterando arquivo do SELinux
+      lineinfile: 
+          path: /etc/selinux/config
+          regexp: '^SELINUX='
+          line: 'SELINUX=disabled'
+
+    - name: Desabilitando o Firewall
+      command: systemctl disable firewalld
+
+    - name: Parando FirewallD
+      command: systemctl stop firewalld

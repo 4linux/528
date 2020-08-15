@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Garantindo /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
+        - 192.168.99.11 graylog graylog.dexter.com.br
+        - 192.168.99.12 prometheus prometheus.dexter.com.br
+        - 192.168.99.13 4flix 4flix.dexter.com.br
+
+    - name: Instalando pacotes de dependencias para o curso
+      apt:
+        name: ['unzip', 'python']
+        update_cache: yes

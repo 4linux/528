@@ -1,0 +1,36 @@
+---
+- hosts: all
+  become: yes
+  become_user: root
+  become_method: sudo
+  tasks:
+    - name: Garantindo /etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{ item }}"
+      with_items:
+        - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
+        - 192.168.99.11 graylog graylog.dexter.com.br
+        - 192.168.99.12 prometheus prometheus.dexter.com.br
+        - 192.168.99.13 4flix 4flix.dexter.com.br
+
+    - name: Criando o arquivo puppet5-release-xenial.deb
+      copy:
+        src: files/puppet5-release-xenial.deb
+        dest: /tmp
+        mode: 0644
+
+    - name: Configura o repositorio do Puppet
+      become: true
+      shell: dpkg -i /tmp/puppet5-release-xenial.deb
+
+    - name: Instalando pacotes de dependencias do Puppet
+      apt:
+        name: ['snmpd', 'python', 'puppet-agent']
+        update_cache: yes
+
+    - name: Criando o arquivo puppet.conf
+      copy:
+        src: files/puppet.conf
+        dest: /etc/puppetlabs/puppet
+        mode: 0644
