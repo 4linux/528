@@ -45,6 +45,7 @@
         - git
         - wget
         - vim
+        - net-tools
 
     - name: Alterando arquivo do SELinux
       lineinfile: 
