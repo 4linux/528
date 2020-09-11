@@ -10,24 +10,41 @@
         line: "{{ item }}"
       with_items:
         - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
-        - 192.168.99.11 graylog graylog.dexter.com.br
-        - 192.168.99.12 prometheus prometheus.dexter.com.br
-        - 192.168.99.13 4flix 4flix.dexter.com.br
+        - 192.168.99.11 prometheus prometheus.dexter.com.br
+        - 192.168.99.12 4flix 4flix.dexter.com.br
+        - 192.168.99.13 graylog graylog.dexter.com.br
 
-    - name: Configura o repositorio do Puppet
-      yum:
-        name: https://yum.puppet.com/puppet5/puppet5-release-el-7.noarch.rpm
-        state: present
+    - name: Adicionar usuario suporte
+      user:
+        name: suporte
+        shell: /bin/bash
+        password : $1$QbUARykG$p2nthVG8AkDvabKPHwboa1
 
-    - name: Instalando pacotes de dependencias para o Puppet
-      yum:
-        name: ['python', 'epel-release', 'puppet-agent']
-
-    - name: Criando o arquivo puppet.conf
+    - name: Criando o arquivo 98_4linux
       copy:
-        src: files/puppet.conf
-        dest: /etc/puppetlabs/puppet
+        src: files/98_4linux
+        dest: /etc/sudoers.d
         mode: 0644
+
+    - name: Ajustando .bashrc do usuario vagrant
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        line: 'sudo su - suporte'
+
+    - name: Instalando pacotes de dependencias para o curso
+      yum:
+        name: "{{ packages }}"
+        state: present
+        update_cache: yes
+      vars:
+        packages:
+        - epel-release
+        - python3
+        - python3-pip
+        - policycoreutils-python
+        - git
+        - wget
+        - vim
 
     - name: Alterando arquivo do SELinux
       lineinfile: 
