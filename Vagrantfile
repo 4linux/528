@@ -37,6 +37,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.become_user        = 'root'
         ansible.compatibility_mode = '2.0'
       end
+      
+      config.vm.provision "shell", inline: "mkdir -p /root/.ssh"
+      config.vm.provision "shell", inline: "cp /vagrant/id_rsa /root/.ssh/id_rsa"
+      config.vm.provision "shell", inline: "cp /vagrant/id_rsa.pub /root/.ssh/authorized_keys"
+      config.vm.provision "shell", inline: "chmod 600 /root/.ssh/id_rsa"
+      
     end
   end
 end
