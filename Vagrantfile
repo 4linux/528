@@ -10,6 +10,10 @@ require 'yaml'
 # Lendo o arquivo YAML com as configuracoes do ambiente
 env = YAML.load_file('environment.yaml')
 
+        if !(File.exists?('id_rsa'))
+          system("ssh-keygen -b 2048 -t rsa -f id_rsa -q -N ''")
+       end
+
 # Limitando apenas a ultima versao estavel do Vagrant instalada
 Vagrant.require_version '>= 2.0.0'
 
