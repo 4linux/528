@@ -13,6 +13,10 @@
         - 192.168.99.11 prometheus prometheus.dexter.com.br
         - 192.168.99.12 4flix 4flix.dexter.com.br
         - 192.168.99.13 graylog graylog.dexter.com.br
+        
+    - name: Configura hostname do host
+      hostname:
+        name: 4flix
 
     - name: Adicionar usuario suporte
       user:
