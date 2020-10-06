@@ -59,8 +59,8 @@
 
     - name: Criando diretório apache-jmeter
       synchronize:
-        src: files/apache-jmeter
-        dest: /home/suporte
+        src: files/apache-jmeter-5.2
+        dest: /root
 
     - name: Download do arquivo docker-ce.repo
       get_url:
