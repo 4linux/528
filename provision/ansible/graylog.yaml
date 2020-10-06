@@ -43,6 +43,14 @@
         - python3-pip
         - software-properties-common
         update_cache: yes
-    - name: Adicionando o repositorio do Ansible
-      apt_repository:
-        repo: ppa:ansible/ansible
+
+    - name: Criando o arquivo get-pip.py
+      copy:
+        src: files/get-pip.py
+        dest: /tmp
+        mode: 0644
+
+    - name: Atualiza o pip com Python 3
+      shell: python3 get-pip.py
+      args:
+        chdir: /tmp
