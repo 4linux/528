@@ -50,15 +50,12 @@
         dest: /tmp
         mode: 0644
 
-<<<<<<< HEAD
     - name: Criando o arquivo get-pip.py
       copy:
         src: files/get-pip.py
         dest: /tmp
         mode: 0644
 
-=======
->>>>>>> 41971989618b6e228a316e6aeb6aa587e313c349
     - name: Atualiza o pip com Python 3
       shell: python3 get-pip.py
       args:
