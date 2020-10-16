@@ -34,20 +34,12 @@
       lineinfile:
         path: /home/vagrant/.bashrc
         line: 'sudo su - suporte'
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 41971989618b6e228a316e6aeb6aa587e313c349
     - name: Instala a versao 7.12 do Epel Release
       yum:
         name: https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-12.noarch.rpm
         state: present
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 41971989618b6e228a316e6aeb6aa587e313c349
     - name: Instalando pacotes de dependencias para o curso
       yum:
         name: "{{ packages }}"
@@ -147,11 +139,7 @@
       shell: python3 get-pip.py
       args:
         chdir: /tmp
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 41971989618b6e228a316e6aeb6aa587e313c349
     - name: Alterando arquivo do SELinux
       lineinfile: 
           path: /etc/selinux/config
