@@ -89,6 +89,7 @@
       get_url:
         url: https://pkg.jenkins.io/redhat/jenkins.repo
         dest: /etc/yum.repos.d/jenkins.repo
+        validate_certs: no
       become: true
 
     - name: Importar chave GPG do Jenkins
