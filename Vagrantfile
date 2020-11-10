@@ -24,13 +24,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       srv.vm.box      = env['box']
       srv.vm.hostname = env['hostname']
       srv.vm.network 'private_network', ip: env['ipaddress']
-      if env['additional_interface'] == true
-        srv.vm.network 'private_network', ip: '1.0.0.100',
-          auto_config: false
-      end
       srv.vm.provider 'virtualbox' do |vb|
         vb.name   = env['name']
-        vb.gui    = true
+        vb.gui    = false
         vb.memory = env['memory']
         vb.cpus   = env['cpus']
       end
@@ -42,6 +38,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         ansible.compatibility_mode = '2.0'
       end
       
+      config.vm.provision "shell", inline: <<-SHELL
+     sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+     systemctl restart sshd
+     SHELL
       config.vm.provision "shell", inline: "mkdir -p /root/.ssh"
       config.vm.provision "shell", inline: "cp /vagrant/id_rsa /root/.ssh/id_rsa"
       config.vm.provision "shell", inline: "cp /vagrant/id_rsa.pub /root/.ssh/authorized_keys"
