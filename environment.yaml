@@ -8,7 +8,7 @@
   provision: provision/ansible/zabbix.yaml
 
 - name: prometheus
-  box: centos/7
+  box: trombik/ansible-centos-7.3-x86_64
   hostname: prometheus.dexter.com.br
   ipaddress: 192.168.99.11
   memory: 1024
@@ -16,7 +16,7 @@
   provision: provision/ansible/prometheus.yaml
 
 - name: 4flix
-  box: centos/7
+  box: trombik/ansible-centos-7.3-x86_64
   hostname: 4flix.dexter.com.br
   ipaddress: 192.168.99.12
   memory: 1024
