@@ -149,4 +149,5 @@
       command: systemctl disable firewalld
 
     - name: Parando FirewallD
+      command: systemctl stop firewalld
 
