@@ -1,4 +1,3 @@
----
 - hosts: all
   become: yes
   become_user: root
@@ -9,11 +8,11 @@
         path: /etc/hosts
         line: "{{ item }}"
       with_items:
-        - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
+        - 192.168.99.10 zabbix zabbix.dexter.com.br
         - 192.168.99.11 prometheus prometheus.dexter.com.br
         - 192.168.99.12 4flix 4flix.dexter.com.br
         - 192.168.99.13 graylog graylog.dexter.com.br
-        
+
     - name: Configura hostname da VM
       hostname:
         name: 4flix
@@ -35,11 +34,6 @@
         path: /home/vagrant/.bashrc
         line: 'sudo su - suporte'
 
-    - name: Instala a versao 7.12 do Epel Release
-      yum:
-        name: https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/e/epel-release-7-12.noarch.rpm
-        state: present
-
     - name: Instalando pacotes de dependencias para o curso
       yum:
         name: "{{ packages }}"
@@ -47,6 +41,7 @@
         update_cache: yes
       vars:
         packages:
+        - epel-release
         - python3
         - python3-pip
         - policycoreutils-python
@@ -90,11 +85,10 @@
         name: suporte
         group: docker
 
-    - name: Download do repositorio do Jenkins  
+    - name: Download do repositorio do Jenkins
       get_url:
         url: https://pkg.jenkins.io/redhat/jenkins.repo
         dest: /etc/yum.repos.d/jenkins.repo
-        validate_certs: no
       become: true
 
     - name: Importar chave GPG do Jenkins
@@ -142,13 +136,16 @@
         chdir: /tmp
 
     - name: Alterando arquivo do SELinux
-      lineinfile: 
+      lineinfile:
           path: /etc/selinux/config
           regexp: '^SELINUX='
           line: 'SELINUX=disabled'
+
+    - name: Desabilitando o SELinux
+      command: setenforce 0
 
     - name: Desabilitando o Firewall
       command: systemctl disable firewalld
 
     - name: Parando FirewallD
-      command: systemctl stop firewalld
+
