@@ -9,7 +9,7 @@
         path: /etc/hosts
         line: "{{ item }}"
       with_items:
-        - 192.168.99.10 zabbix zabbix.4linux.com.br zabbix.dexter.com.br
+        - 192.168.99.10 zabbix zabbix.dexter.com.br
         - 192.168.99.11 prometheus prometheus.dexter.com.br
         - 192.168.99.12 4flix 4flix.dexter.com.br
         - 192.168.99.13 graylog graylog.dexter.com.br
