@@ -1,6 +1,6 @@
 ---
 - name: zabbix
-  box: ubuntu/bionic64
+  box: trombik/ansible-ubuntu-18.04-amd64
   hostname: zabbix.dexter.com.br
   ipaddress: 192.168.99.10
   memory: 1024
@@ -24,7 +24,7 @@
   provision: provision/ansible/4flix.yaml
 
 - name: graylog
-  box: ubuntu/bionic64
+  box: trombik/ansible-ubuntu-18.04-amd64
   hostname: graylog.dexter.com.br
   ipaddress: 192.168.99.13
   memory: 1024
