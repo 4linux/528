@@ -54,3 +54,8 @@
       shell: python3 get-pip.py
       args:
         chdir: /tmp
+
+    - name: Atualiza o timezone
+      shell: timedatectl set-timezone America/Sao_Paulo
+      args:
+

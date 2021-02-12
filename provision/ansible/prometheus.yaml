@@ -50,6 +50,8 @@
         - wget
         - vim
         - net-tools
+        - tzdata
+        - tzdata-java
         
     - name: Criando o arquivo get-pip.py
       copy:
@@ -76,3 +78,8 @@
 
     - name: Parando FirewallD
       command: systemctl stop firewalld
+
+    - name: Atualiza o timezone
+      shell: timedatectl set-timezone America/Sao_Paulo
+      args:
+
