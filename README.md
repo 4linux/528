@@ -12,9 +12,11 @@ Para a criação do laboratório é necessário ter pré instalado os seguintes 
 * [VirtualBox][3]
 * [Vagrant][4]
 
-> Para o máquinas com Windows aconselhamos, se possível, que as instalações sejam feitas pelo gerenciador de pacotes **[Cygwin][5]**.
+> Para as máquinas com Windows aconselhamos, se possível, que as instalações sejam feitas pelo gerenciador de pacotes **[Cygwin][5]**.
 
-> Para as máquinas com MAC OS aconselhamos, se possível, que as instalações sejam feitas pelo gerenciador de pacotes **brew**.
+> Para as máquinas com Windows, é necessário que o [Hyper-V][9] esteja `desabilitado`.
+
+> Para as máquinas com MAC OS aconselhamos, se possível, que as instalações sejam feitas pelo gerenciador de pacotes **brew**. 
 
 Laboratório
 -----------
@@ -30,9 +32,10 @@ prometheus      | 1     | 1024MB | 192.168.99.11 | centos-7.3-x86_64
 4flix      | 1     | 1024MB | 192.168.99.12 | centos-7.3-x86_64
 graylog      | 1     | 1024MB | 192.168.99.13 | ubuntu-18.04-amd64 
 
-> **¹**: Esses Sistemas operacionais estão sendo utilizado no formato de Boxes, é a forma como o vagrant chama as imagens do sistema operacional utilizado.
+>  Esses Sistemas operacionais estão sendo utilizado no formato de Boxes, é a forma como o vagrant chama as imagens do sistema operacional utilizado.
+>  A memória inicial de cada VM está definida com 1024MB (1GB). Este valor pode ser aumentado, cado necessário através do arquivo `environment.yaml`.
 
-Criação do Laboratório 
+Criação do Laboratório
 ----------------------
 
 Para criar o laboratório é necessário fazer o `git clone` desse repositório e, dentro da pasta baixada realizar a execução do `vagrant up`, conforme abaixo:
@@ -44,6 +47,50 @@ vagrant up
 ```
 
 _O Laboratório **pode demorar**, dependendo da conexão de internet e poder computacional, para ficar totalmente preparado._
+
+## Utilização
+
+Todos os comandos devem ser utilizados dentro do diretório clonado.
+
+Para listar as máquinas:
+
+```bash
+vagrant status
+```
+
+Para entrar em uma máquina:
+
+```bash
+vagrant ssh automation
+```
+
+Para iniciar as máquinas:
+
+```bash
+vagrant up
+```
+
+Para salvar o estado das máquinas:
+
+```bash
+vagrant suspend
+```
+
+Retomar as máquinas suspensas:
+
+```bash
+vagrant resume
+```
+
+Para desligar as máquinas:
+
+```bash
+vagrant halt
+```
+
+## Dicas
+
+Para a agilidade do projeto, você pode apenas efetuar o `vagrant suspend/resume` da VM, tendo em vista que o comando `vagrant up` realiza algumas verificações que podem demorar.
 
 > Em caso de erro na criação das máquinas sempre valide se sua conexão está boa, os logs de erros na tela e, se necessário, o arquivo **/var/log/vagrant_provision.log** dentro da máquina que apresentou a falha.
 
@@ -72,3 +119,4 @@ Comandos                | Descrição
 [6]: https://www.vagrantup.com/
 [7]: ./Vagrantfile
 [8]: https://www.vagrantup.com/docs
+[9]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/about/
