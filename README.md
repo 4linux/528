@@ -48,7 +48,8 @@ vagrant up
 
 _O Laboratório **pode demorar**, dependendo da conexão de internet e poder computacional, para ficar totalmente preparado._
 
-## Utilização
+Utilização
+----------
 
 Todos os comandos devem ser utilizados dentro do diretório clonado.
 
@@ -88,13 +89,14 @@ Para desligar as máquinas:
 vagrant halt
 ```
 
-## Dicas
+Dicas
+-----
 
-Para a agilidade do projeto, você pode apenas efetuar o `vagrant suspend/resume` da VM, tendo em vista que o comando `vagrant up` realiza algumas verificações que podem demorar.
+Para a agilidade no processo de religar as VMs, você pode apenas efetuar o `vagrant suspend/resume` da VM após terminar sua utilização em determinado período, tendo em vista que o comando `vagrant up` realiza algumas verificações que podem demorar.
 
 > Em caso de erro na criação das máquinas sempre valide se sua conexão está boa, os logs de erros na tela e, se necessário, o arquivo **/var/log/vagrant_provision.log** dentro da máquina que apresentou a falha.
 
-Por fim, para melhor utilização, abaixo há alguns comandos básicos do vagrant para gerencia das máquinas virtuais.
+Por fim, abaixo há alguns comandos básicos do vagrant para a gerencia das máquinas virtuais.
 
 Comandos                | Descrição
 :----------------------:| ---------------------------------------
