@@ -1,0 +1,13 @@
+[Unit]
+Description=cAdvisor Exporter
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/home/suporte/go/bin/cadvisor -port 8081
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
