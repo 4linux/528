@@ -1,5 +1,0 @@
-{HOSTNAME}
-
-Status: {{HOSTNAME}:icmpping.last()}
-Latência: {{HOSTNAME}:icmppingsec.last()}
-Perda: {{HOSTNAME}:icmppingloss.last()}
