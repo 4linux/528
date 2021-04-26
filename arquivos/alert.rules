@@ -1,0 +1,35 @@
+groups:
+- name: alert.rules
+  rules:
+  - alert: ExportadorParado
+    annotations:
+      description: 'O exportador {{ $labels.job }} em {{ $labels.instance }} esta fora do ar por mais de 5   minutos!'
+      summary: Exportador {{ $labels.instance }} parado
+    expr: up == 0
+    for: 5m
+    labels:
+      severity: critical
+  - alert: ConsumoDeProcessamento
+    annotations:
+      description: '{{ $labels.instance }} esta com processamento alto!'
+      summary: Instance {{ $labels.instance }} - Alto consumo de processamento
+    expr: 100 - (avg by (instance) (irate(node_cpu_seconds_total{job="node",mode="idle"}[5m]))* 100) > 96
+    for: 2m
+    labels:
+      severity: critical
+  - alert: ConsumoDeMemoria
+    annotations:
+      description: '{{ $labels.instance }} esta consumindo muita memoria!'
+      summary: Instance {{ $labels.instance }} Alto consumo de memoria
+    expr: (1 - ((node_memory_MemFree_bytes + node_memory_Buffers_bytes + node_memory_Cached_bytes)/ node_memory_MemTotal_bytes)) * 100 > 98
+    for: 5m
+    labels:
+      severity: critical
+  - alert: ConsumoDeArmazenamento
+    annotations:
+      description: '{{ $labels.instance }} tem menos de 10% espaco para armazenamento!'
+      summary: Instance {{ $labels.instance }} - Alto consumo de armazenamento
+    expr: node_filesystem_free_bytes{mountpoint!~"^/run(/.*|$)",fstype!~"(squashfs|fuse.*)",job="node"}/ node_filesystem_size_bytes{job="node"} < 0.1
+    for: 4m
+    labels:
+      severity: critical

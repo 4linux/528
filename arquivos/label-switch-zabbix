@@ -1,0 +1,5 @@
+{HOSTNAME}
+
+Status: {{HOSTNAME}:icmpping.last()}
+SNMP availability: {{HOSTNAME}:zabbix[host,snmp,available].last()}
+Latência: {{HOSTNAME}:icmppingsec.last()}
