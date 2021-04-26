@@ -1,0 +1,12 @@
+[Unit]
+Description=Apache Exporter
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/home/suporte/go/bin/apache_exporter
+
+[Install]
+WantedBy=multi-user.target
