@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+  - zabbix_version: 4.0
+  - zabbix_agent_server: "192.168.99.10"
+  - zabbix_agent_serveractive: "192.168.99.10"
+  - zabbix_agent_hostmetadataitem: "system.uname"
+  roles:
+  - ansible-zabbix-agent
