@@ -1,0 +1,6 @@
+{HOSTNAME}
+
+Uptime: {{HOSTNAME}:system.uptime.last()}
+Load average: {{HOSTNAME}:system.cpu.load[all,avg1].last()}, {{HOSTNAME}:system.cpu.load[all,avg5].last()}, {{HOSTNAME}:system.cpu.load[all,avg15].last()}
+{{HOSTNAME}:vfs.fs.inode[/,pfree].last()} de armazenamento livre
+Memória disponível: {{HOSTNAME}:vm.memory.size[available].last()}
