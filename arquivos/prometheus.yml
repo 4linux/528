@@ -1,0 +1,26 @@
+scrape_configs:
+
+global:
+  evaluation_interval: 15s
+  scrape_interval: 15s
+  scrape_timeout: 10s
+
+  external_labels:
+    environment: ip-172-31-35-55.us-east-2.compute.internal
+
+rule_files:
+  - /etc/prometheus/rules/*.rules
+
+scrape_configs:
+  - job_name: prometheus
+    metrics_path: /metrics
+    static_configs:
+    - targets:
+      - ip-172-31-35-55.us-east-2.compute.internal:9090
+
+  - job_name: 'node'
+    ec2_sd_configs:
+      - region: us-east-2
+        access_key: XXXXX
+        secret_key: XXXXXXXXXXXXXX
+        port: 9100
