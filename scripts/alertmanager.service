@@ -1,0 +1,13 @@
+[Unit]
+Description=alertmanager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecStart=/usr/bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml --storage.path /var/lib/alertmanager/data
+
+[Install]
+WantedBy=multi-user.target
