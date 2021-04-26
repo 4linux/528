@@ -1,0 +1,15 @@
+[Unit]
+Description=Jenkins Exporter
+After=network-online.target
+
+[Service]
+Type=simple
+Environment="GOMAXPROCS=1"
+User=suporte
+Group=suporte
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart=/home/suporte/jenkins_exporter/jenkins_exporter.py -j http://127.0.0.1:8080 --user analista --password 4linux
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
