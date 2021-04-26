@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - lineinfile:
+        path: /etc/rsyslog.conf
+        line: '*.* @192.168.99.13:1514;RSYSLOG_SyslogProtocol23Format'
+    - name: Reiniciar o rsyslog
+      service:
+        name: rsyslog
+        state: restarted
