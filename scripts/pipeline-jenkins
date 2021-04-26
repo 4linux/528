@@ -1,0 +1,23 @@
+cd app
+sudo docker build -t aliflix-python .
+cd ..
+cd frontend
+sudo docker build -t aliflix-front .
+cd ..
+sudo docker rm -f db || true
+sudo docker run --log-driver=gelf --log-opt gelf-address=udp://192.168.99.11:12201 -tdi --name db -p27017:27017 mongo:3.6
+sleep 10
+ip_db=$(sudo docker inspect db | grep -w "IPAddress" | awk '{ print $2 }' | head -n 1 | cut -d "," -f1 | sed -e 's/\"//g' )
+export NODE_ENV=$ip_db
+sed -i -e 's/ip/'"$ip_db"'/g' MongoScripts/aula4.js
+mongo $ip_db:27017/dexter < MongoScripts/aula4.js
+sed -i -e 's/ip/'"$ip_db"'/g' MongoScripts/hello.js
+mongo $ip_db:27017/dexter < MongoScripts/hello.js
+sudo docker rm -f app || true
+sudo docker run --log-driver=gelf --log-opt gelf-address=udp://192.168.99.11:12201 --name app --hostname app --link db -p5000:5000 -d aliflix-python
+sudo docker rm -f front || true
+sudo docker run --log-driver=gelf --log-opt gelf-address=udp://192.168.99.11:12201 -tdi --name=front --hostname front --link app -p80:80 aliflix-front
+sleep 10
+ip_app=$(sudo docker inspect app | grep -w "IPAddress" | awk '{ print $2 }' | head -n 1 | cut -d "," -f1 | sed -e 's/\"//g' )
+sed -i -E 's/(stringProp name="HTTPSampler.domain">)([a-zA-Z0-9"-])+/\1'"$ip_app"'/g' jenkins/aliflix.jmx
+sudo /root/apache-jmeter-5.2/bin/jmeter -n -t jenkins/aliflix.jmx -l aliflix.jtl
