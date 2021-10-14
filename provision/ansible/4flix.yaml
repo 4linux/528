@@ -89,13 +89,14 @@
       get_url:
         url: https://pkg.jenkins.io/redhat/jenkins.repo
         dest: /etc/yum.repos.d/jenkins.repo
-        validate_certs: no
+        validate_certs: False
       become: true
 
     - name: Importar chave GPG do Jenkins
       rpm_key:
         state: present
         key: https://pkg.jenkins.io/redhat/jenkins.io.key
+        validate_certs: False
 
     - name: Instalar o Jenkins
       yum:
