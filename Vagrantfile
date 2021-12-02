@@ -1,55 +1,43 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# Variaveis
-VAGRANTFILE_API_VERSION = 2
+vms = {
+  'zabbix' => {'memory' => '1024', 'cpus' => 1, 'ip' => '10', 'box' => 'ubuntu/bionic64', 'provision' => 'provision/ansible/zabbix.yaml'},
+  'prometheus' => {'memory' => '1024', 'cpus' => 1, 'ip' => '11', 'box' => 'centos/7','provision' => 'provision/ansible/prometheus.yaml'},
+  '4flix' => {'memory' => '1024', 'cpus' => 1, 'ip' => '12', 'box' => 'centos/7', 'provision' => 'provision/ansible/4flix.yaml'},
+  'graylog' => {'memory' => '1024', 'cpus' => 1, 'ip' => '13', 'box' => 'ubuntu/bionic64', 'provision' => 'provision/ansible/graylog.yaml'}
+}
 
-# Chamando modulo YAML
-require 'yaml'
+Vagrant.configure('2') do |config|
 
-# Lendo o arquivo YAML com as configuracoes do ambiente
-env = YAML.load_file('environment.yaml')
+  config.vm.box_check_update = false
 
         if !(File.exists?('id_rsa'))
           system("ssh-keygen -b 2048 -t rsa -f id_rsa -q -N ''")
        end
 
-# Limitando apenas a ultima versao estavel do Vagrant instalada
-Vagrant.require_version '>= 2.0.0'
-
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # Iteracao com os servidores do ambiente
-  env.each do |env|
-    if Vagrant.has_plugin?("vagrant-vbguest")
-    config.vbguest.auto_update = false
-    end
-    config.vm.define env['name'] do |srv|
-      srv.vm.box      = env['box']
-      srv.vm.hostname = env['hostname']
-      srv.vm.network 'private_network', ip: env['ipaddress']
-      srv.vm.provider 'virtualbox' do |vb|
-        vb.name   = env['name']
-        vb.gui    = false
-        vb.memory = env['memory']
-        vb.cpus   = env['cpus']
+  vms.each do |name, conf|
+    config.vm.define "#{name}" do |k|
+      k.vm.box = "#{conf['box']}"
+      k.vm.hostname = "#{name}.dexter.com.br"
+      k.vm.network 'private_network', ip: "192.168.99.#{conf['ip']}"
+      k.vm.provider 'virtualbox' do |vb|
+        vb.memory = conf['memory']
+        vb.cpus = conf['cpus']
       end
-      srv.vm.provision 'ansible_local' do |ansible|
-        ansible.playbook           = env['provision']
-        ansible.install_mode       = 'pip'
-        ansible.become             = true
-        ansible.become_user        = 'root'
-        ansible.compatibility_mode = '2.0'
+      k.vm.provision 'ansible_local' do |ansible|
+        ansible.playbook = "#{conf['provision']}"
       end
-      
-      config.vm.provision "shell", inline: <<-SHELL
-     sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
-     systemctl restart sshd
-     SHELL
-      config.vm.provision "shell", inline: "mkdir -p /root/.ssh"
-      config.vm.provision "shell", inline: "cp /vagrant/id_rsa /root/.ssh/id_rsa"
-      config.vm.provision "shell", inline: "cp /vagrant/id_rsa.pub /root/.ssh/authorized_keys"
-      config.vm.provision "shell", inline: "chmod 600 /root/.ssh/id_rsa"
-      
-    end
   end
+
+    config.vm.provision "shell", inline: <<-SHELL
+      sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+      systemctl restart sshd
+      mkdir -p /root/.ssh
+      cp /vagrant/id_rsa /root/.ssh/id_rsa
+      cp /vagrant/id_rsa.pub /root/.ssh/authorized_keys
+      chmod 600 /root/.ssh/id_rsa
+       SHELL
+
+    end
 end
