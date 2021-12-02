@@ -34,8 +34,8 @@ Vagrant.configure('2') do |config|
       sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
       systemctl restart sshd
       mkdir -p /root/.ssh
-      cp /vagrant/id_rsa /root/.ssh/id_rsa
-      cp /vagrant/id_rsa.pub /root/.ssh/authorized_keys
+      cp /vagrant/keys/id_rsa /root/.ssh/id_rsa
+      cp /vagrant/keys/id_rsa.pub /root/.ssh/authorized_keys
       chmod 600 /root/.ssh/id_rsa
        SHELL
 
