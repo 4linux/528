@@ -23,17 +23,6 @@
         shell: /bin/bash
         password : $1$QbUARykG$p2nthVG8AkDvabKPHwboa1
 
-    - name: Criando o arquivo 98_4linux
-      copy:
-        src: files/98_4linux
-        dest: /etc/sudoers.d
-        mode: 0644
-
-    - name: Ajustando .bashrc do usuario vagrant
-      lineinfile:
-        path: /home/vagrant/.bashrc
-        line: 'sudo su - suporte'
-
     - name: Instalando pacotes de dependencias para o curso
       yum:
         name: "{{ packages }}"
@@ -155,4 +144,3 @@
     - name: Atualiza o timezone
       shell: timedatectl set-timezone America/Sao_Paulo
       args:
-
