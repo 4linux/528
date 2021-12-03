@@ -37,6 +37,19 @@ Vagrant.configure('2') do |config|
       cp /vagrant/keys/id_rsa /root/.ssh/id_rsa
       cp /vagrant/keys/id_rsa.pub /root/.ssh/authorized_keys
       chmod 600 /root/.ssh/id_rsa
+
+      source /etc/os-release
+
+      if [[ "$ID_LIKE" = *debian* ]] 
+      then
+       apt-get update && apt-get install ansible -y
+      fi
+
+      if [[ "$ID_LIKE" = *rhel* ]]
+      then
+       yum clean all && yum install epel-release ansible -y
+      fi 
+
        SHELL
 
     end
