@@ -14,42 +14,18 @@
         - 192.168.99.12 4flix 4flix.dexter.com.br
         - 192.168.99.13 graylog graylog.dexter.com.br
 
-    - name: Adicionar usuario suporte
-      user:
-        name: suporte
-        shell: /bin/bash
-        password : $1$QbUARykG$p2nthVG8AkDvabKPHwboa1
-
     - name: Instalando pacotes de dependencias para o curso
       apt:
         name: "{{ packages }}"
         state: present
-        update_cache: yes
       vars:
         packages:
-        - unzip
-        - python3
-        - python3-pip
-        - software-properties-common
-        - vim
         - telnet
         - git
         - python-netaddr
         - snap
         - snapd
-        update_cache: yes
         
-    - name: Criando o arquivo get-pip.py
-      copy:
-        src: files/get-pip.py
-        dest: /tmp
-        mode: 0644
-
-    - name: Atualiza o pip com Python 3
-      shell: python3 get-pip.py
-      args:
-        chdir: /tmp
-
     - name: Atualiza o timezone
       shell: timedatectl set-timezone America/Sao_Paulo
       args:
