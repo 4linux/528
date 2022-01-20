@@ -17,6 +17,12 @@
       hostname:
         name: 4flix
 
+    - name: Adicionar usuario suporte
+      user:
+        name: suporte
+        shell: /bin/bash
+        password : $1$QbUARykG$p2nthVG8AkDvabKPHwboa1
+
     - name: Instalando pacotes de dependencias para o curso
       yum:
         name: "{{ packages }}"
@@ -25,15 +31,48 @@
       vars:
         packages:
         - epel-release
-        - policycoreutils-python-utils
+        - python3
+        - python3-pip
+        - policycoreutils-python
         - git
+        - wget
+        - vim
         - net-tools
+        - unzip
         - java-1.8.0-openjdk
 
     - name: Criando diretório apache-jmeter
       synchronize:
         src: files/apache-jmeter-5.2
         dest: /root
+
+    - name: Download do arquivo docker-ce.repo
+      get_url:
+        url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docker-ce.repo
+        mode: 0644
+
+    - name: Instalando pacotes do Docker
+      yum:
+        name: "{{ packages }}"
+        state: present
+        update_cache: yes
+      vars:
+        packages:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+
+    - name: Iniciar servico do Docker
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Adiciona o usuario suporte no grupo docker
+      user:
+        name: suporte
+        group: docker
 
     - name: Download do repositorio do Jenkins
       get_url:
@@ -75,6 +114,32 @@
       yum:
         name: mongodb-org-shell.x86_64
         state: present
+
+    - name: Criando o arquivo get-pip.py
+      copy:
+        src: files/get-pip.py
+        dest: /tmp
+        mode: 0644
+
+    - name: Atualiza o pip com Python 3
+      shell: python3 get-pip.py
+      args:
+        chdir: /tmp
+
+    - name: Alterando arquivo do SELinux
+      lineinfile:
+          path: /etc/selinux/config
+          regexp: '^SELINUX='
+          line: 'SELINUX=disabled'
+
+    - name: Desabilitando o SELinux
+      command: setenforce 0
+
+    - name: Desabilitando o Firewall
+      command: systemctl disable firewalld
+
+    - name: Parando FirewallD
+      command: systemctl stop firewalld
 
     - name: Atualiza o timezone
       shell: timedatectl set-timezone America/Sao_Paulo
