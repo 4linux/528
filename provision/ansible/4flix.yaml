@@ -39,7 +39,7 @@
         - vim
         - net-tools
         - unzip
-        - java-1.8.0-openjdk
+        - java-11-openjdk-devel
 
     - name: Criando diretório apache-jmeter
       synchronize:
